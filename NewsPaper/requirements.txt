@@ -1,0 +1,9 @@
+Django
+django-filter
+listview
+pip
+pydantic
+pydantic_core
+sqlparse
+typing_extensions
+tzdata
