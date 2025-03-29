@@ -2,10 +2,9 @@
 # Импортируем класс, который говорит нам о том,
 # что в этом представлении мы будем выводить список объектов из БД
 from datetime import datetime
-
-from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (
-    ListView, DetailView, CreateView, UpdateView, DeleteView
+    ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 )
 
 from .filters import PostFilter
@@ -87,3 +86,7 @@ class PostDelete(DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = '/post'  # reverse_lazy('post_list')
+
+
+class ProtectedView(LoginRequiredMixin, TemplateView):
+    template_name = 'prodected_page.html'
