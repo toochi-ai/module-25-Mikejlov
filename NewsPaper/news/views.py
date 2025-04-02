@@ -85,8 +85,13 @@ class PostUpdate(UpdateView):
 class PostDelete(DeleteView):
     model = Post
     template_name = 'post_delete.html'
-    success_url = '/post'  # reverse_lazy('post_list')
-
-
-class ProtectedView(LoginRequiredMixin, TemplateView):
-    template_name = 'prodected_page.html'
+    success_url = '/post'
+#
+#
+# class ProtectedView(LoginRequiredMixin, TemplateView):
+#     template_name = 'prodected_page.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
+#         return context
