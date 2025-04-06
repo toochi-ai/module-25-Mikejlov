@@ -2,7 +2,7 @@
 # Импортируем класс, который говорит нам о том,
 # что в этом представлении мы будем выводить список объектов из БД
 from datetime import datetime
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 )
@@ -45,7 +45,9 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
 
-class PostCreate(CreateView):
+class PostCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = ("news.add_post",)
+    model = Post
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -82,16 +84,17 @@ class PostUpdate(UpdateView):
     template_name = 'post_edit.html'
 
 
-class PostDelete(DeleteView):
+class PostDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = ("news.delete_post",)
     model = Post
     template_name = 'post_delete.html'
     success_url = '/post'
-#
-#
-# class ProtectedView(LoginRequiredMixin, TemplateView):
-#     template_name = 'prodected_page.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
-#         return context
+
+
+class ProtectedView(LoginRequiredMixin, TemplateView):
+    template_name = 'protected_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
+        return context
